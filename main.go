@@ -11,9 +11,7 @@ func main() {
 	var pool *WorkerPool
 
 	app := fx.New(
-		// to let time to workers to finish
-		fx.StopTimeout(3*time.Second),
-		// load worker module
+		// register worker module
 		FxWorkerModule,
 		// register workers
 		AsWorker(workers.NewSuccessWorker),
@@ -32,6 +30,8 @@ func main() {
 		}),
 		// pool extraction
 		fx.Populate(&pool),
+		// to let time to workers to finish
+		fx.StopTimeout(3*time.Second),
 	)
 
 	app.Run()
