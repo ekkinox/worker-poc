@@ -65,7 +65,7 @@ func (p *WorkerPool) startWorker(ctx context.Context, worker Worker) {
 		p.observer.Observe(worker, Running, "started")
 
 		if err := worker.Run(ctx); err != nil {
-			p.observer.Observe(worker, Stopped, err.Error())
+			p.observer.Observe(worker, Stopped, fmt.Sprintf("error: %v", err.Error()))
 		} else {
 			p.observer.Observe(worker, Stopped, "completed")
 		}
