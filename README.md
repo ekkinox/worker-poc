@@ -42,8 +42,10 @@ func (w *MyWorker) Run(ctx context.Context) error {
 	for {
 		select {
 		case <-ctx.Done():
+			// to react to worker pool stop (ctx cancellation)
 			return nil
 		default:
+			// your worker logic
 			time.Sleep(1 * time.Second) // simulate work
 		}
 	}
