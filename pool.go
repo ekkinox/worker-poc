@@ -51,7 +51,7 @@ func (p *WorkerPool) AddWorkers(workers ...Worker) {
 func (p *WorkerPool) startWorker(ctx context.Context, worker Worker) {
 	p.waitGroup.Add(1)
 
-	go func() {
+	go func(ctx context.Context) {
 		defer func() {
 			p.waitGroup.Done()
 
@@ -67,5 +67,5 @@ func (p *WorkerPool) startWorker(ctx context.Context, worker Worker) {
 		} else {
 			p.observer.Observe(worker, Stopped, "completed")
 		}
-	}()
+	}(ctx)
 }

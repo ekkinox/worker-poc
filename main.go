@@ -21,7 +21,7 @@ func main() {
 		fx.Invoke(func(pool *WorkerPool) {
 			go func() {
 				for {
-					time.Sleep(2 * time.Second)
+					time.Sleep(3 * time.Second)
 
 					printObservation("periodical observation", pool)
 				}
@@ -32,7 +32,7 @@ func main() {
 
 	app.Run()
 
-	time.Sleep(2 * time.Second)
+	time.Sleep(1 * time.Second)
 
 	printObservation("last observation", pool)
 
@@ -45,7 +45,7 @@ func printObservation(title string, pool *WorkerPool) {
 		fmt.Println("")
 		fmt.Printf("%s: %s (%d events)\n", name, execution.Status(), len(execution.Events()))
 		for _, event := range execution.Events() {
-			fmt.Printf("- message: %s, time: %s\n", event.Message(), event.Timestamp())
+			fmt.Printf("- message: %s (at: %s)\n", event.Message(), event.Timestamp().Format(time.DateTime))
 		}
 	}
 
