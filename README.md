@@ -46,7 +46,7 @@ func (w *MyWorker) Run(ctx context.Context) error {
 			return nil
 		default:
 			// your worker logic
-			time.Sleep(1 * time.Second) // simulate work
+			time.Sleep(1 * time.Second)
 		}
 	}
 }
