@@ -38,5 +38,5 @@ func main() {
 
 	time.Sleep(1 * time.Second)
 
-	printObservation("last observation", pool)
+	printObservation("final observation", pool)
 }
