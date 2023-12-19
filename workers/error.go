@@ -27,7 +27,7 @@ func (w *ErrorWorker) Run(ctx context.Context) error {
 		default:
 			fmt.Println("\n####### => ", w.Name(), "is running\n")
 			time.Sleep(1 * time.Second) // simulate work
-			return fmt.Errorf("custom error from %s worker", w.Name())
+			return fmt.Errorf("custom error")
 		}
 	}
 }

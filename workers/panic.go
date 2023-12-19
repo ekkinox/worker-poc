@@ -27,7 +27,7 @@ func (w *PanicWorker) Run(ctx context.Context) error {
 		default:
 			fmt.Println("\n####### => ", w.Name(), "is running\n")
 			time.Sleep(1 * time.Second) // simulate work
-			panic(fmt.Sprintf("panic form %s worker", w.Name()))
+			panic("custom panic")
 		}
 	}
 }
