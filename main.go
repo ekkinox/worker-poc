@@ -21,14 +21,14 @@ func main() {
 		AsWorker(workers.NewPanicWorker),
 		// periodic observation
 		fx.Invoke(func(pool *WorkerPool) {
-			go func() {
+			go func(pool *WorkerPool) {
 				for {
 					time.Sleep(3 * time.Second)
 
 					printObservation("periodical observation", pool)
 				}
 
-			}()
+			}(pool)
 		}),
 		// pool extraction
 		fx.Populate(&pool),
