@@ -28,7 +28,7 @@ func main() {
 
 			}(pool)
 		}),
-		// pool extraction
+		// pool extraction (for final observation)
 		fx.Populate(&pool),
 		// to let time to workers to finish
 		fx.StopTimeout(3*time.Second),
