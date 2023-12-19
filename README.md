@@ -18,7 +18,7 @@ After a while, you can `ctrl+c` to see the worker pool `graceful shutdown` in ac
 
 ## Worker registration
 
-To register a worker, you need to implement the [Worker](worker.go) interface.
+To register a worker, you need to implement the [Worker](worker.go) interface:
 
 ```go
 package workers
