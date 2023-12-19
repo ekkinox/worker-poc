@@ -23,7 +23,7 @@ func main() {
 				for {
 					time.Sleep(2 * time.Second)
 
-					printObservation("run observation", pool)
+					printObservation("periodical observation", pool)
 				}
 
 			}()
