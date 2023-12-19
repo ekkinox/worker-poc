@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/ekkinox/worker-poc/workers"
@@ -12,12 +11,15 @@ func main() {
 	var pool *WorkerPool
 
 	app := fx.New(
+		// to let time to workers to finish
 		fx.StopTimeout(3*time.Second),
+		// load worker module
 		FxWorkerModule,
+		// register workers
 		AsWorker(workers.NewSuccessWorker),
 		AsWorker(workers.NewErrorWorker),
 		AsWorker(workers.NewPanicWorker),
-		fx.Populate(&pool),
+		// periodic observation
 		fx.Invoke(func(pool *WorkerPool) {
 			go func() {
 				for {
@@ -28,6 +30,8 @@ func main() {
 
 			}()
 		}),
+		// pool extraction
+		fx.Populate(&pool),
 	)
 
 	app.Run()
@@ -35,19 +39,4 @@ func main() {
 	time.Sleep(1 * time.Second)
 
 	printObservation("last observation", pool)
-
-}
-
-func printObservation(title string, pool *WorkerPool) {
-	fmt.Printf("****\n%s:\n", title)
-
-	for name, execution := range pool.Observer().Executions() {
-		fmt.Println("")
-		fmt.Printf("%s: %s (%d events)\n", name, execution.Status(), len(execution.Events()))
-		for _, event := range execution.Events() {
-			fmt.Printf("- message: %s (at: %s)\n", event.Message(), event.Timestamp().Format(time.DateTime))
-		}
-	}
-
-	fmt.Println("****\n\n")
 }
