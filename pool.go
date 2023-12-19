@@ -8,22 +8,26 @@ import (
 
 // WorkerManager manages the workers
 type WorkerPool struct {
+	workers           []Worker
 	waitGroup         sync.WaitGroup
 	context           context.Context
 	contextCancelFunc context.CancelFunc
 	observer          *WorkerExecutionObserver
-	workers           []Worker
 }
 
 func NewWorkerPool() *WorkerPool {
 	return &WorkerPool{
-		observer: NewWorkerExecutionObserver(),
 		workers:  []Worker{},
+		observer: NewWorkerExecutionObserver(),
 	}
 }
 
 func (p *WorkerPool) Observer() *WorkerExecutionObserver {
 	return p.observer
+}
+
+func (p *WorkerPool) AddWorkers(workers ...Worker) {
+	p.workers = append(p.workers, workers...)
 }
 
 func (p *WorkerPool) Start(ctx context.Context) error {
@@ -42,10 +46,6 @@ func (p *WorkerPool) Stop() error {
 	p.waitGroup.Wait()
 
 	return nil
-}
-
-func (p *WorkerPool) AddWorkers(workers ...Worker) {
-	p.workers = append(p.workers, workers...)
 }
 
 func (p *WorkerPool) startWorker(ctx context.Context, worker Worker) {
