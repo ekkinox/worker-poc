@@ -28,17 +28,21 @@ func (e *WorkerExecutionEvent) Timestamp() time.Time {
 
 // WorkerExecution execution
 type WorkerExecution struct {
-	mutex  sync.Mutex
-	name   string
-	status WorkerStatus
-	events []*WorkerExecutionEvent
+	mutex   sync.Mutex
+	name    string
+	status  WorkerStatus
+	current int
+	limit   int
+	events  []*WorkerExecutionEvent
 }
 
-func NewWorkerExecution(worker Worker) *WorkerExecution {
+func NewWorkerExecution(worker Worker, limit int) *WorkerExecution {
 	return &WorkerExecution{
-		name:   worker.Name(),
-		status: Unknown,
-		events: []*WorkerExecutionEvent{},
+		name:    worker.Name(),
+		status:  Unknown,
+		current: 0,
+		limit:   limit,
+		events:  []*WorkerExecutionEvent{},
 	}
 }
 
@@ -58,6 +62,38 @@ func (e *WorkerExecution) SetStatus(status WorkerStatus) *WorkerExecution {
 	defer e.mutex.Unlock()
 
 	e.status = status
+
+	return e
+}
+
+func (e *WorkerExecution) Current() int {
+	e.mutex.Lock()
+	defer e.mutex.Unlock()
+
+	return e.current
+}
+
+func (e *WorkerExecution) SetCurrent(current int) *WorkerExecution {
+	e.mutex.Lock()
+	defer e.mutex.Unlock()
+
+	e.current = current
+
+	return e
+}
+
+func (e *WorkerExecution) Limit() int {
+	e.mutex.Lock()
+	defer e.mutex.Unlock()
+
+	return e.limit
+}
+
+func (e *WorkerExecution) SetLimit(limit int) *WorkerExecution {
+	e.mutex.Lock()
+	defer e.mutex.Unlock()
+
+	e.limit = limit
 
 	return e
 }

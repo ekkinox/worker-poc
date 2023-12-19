@@ -27,7 +27,7 @@ type FxWorkerPoolParam struct {
 }
 
 func NewFxWorkerPool(p FxWorkerPoolParam) *WorkerPool {
-	pool := NewWorkerPool().AddWorkers(p.Workers...)
+	pool := NewWorkerPool(WithExecutionsLimit(3)).AddWorkers(p.Workers...)
 
 	p.LifeCycle.Append(fx.Hook{
 		OnStart: func(context.Context) error {

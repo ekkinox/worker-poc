@@ -16,6 +16,6 @@ func (i *FxWorkerModuleInfo) Name() string {
 
 func (i *FxWorkerModuleInfo) Data() map[string]interface{} {
 	return map[string]interface{}{
-		"workers": i.pool.Observer().Executions(),
+		"workers": i.pool.Report(),
 	}
 }

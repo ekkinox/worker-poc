@@ -8,7 +8,7 @@ import (
 func printObservation(title string, pool *WorkerPool) {
 	fmt.Printf("****\n%s:\n", title)
 
-	for name, execution := range pool.Observer().Executions() {
+	for name, execution := range pool.Report() {
 		fmt.Println("")
 		fmt.Printf("%s: %s (%d events)\n", name, execution.Status(), len(execution.Events()))
 		for _, event := range execution.Events() {
