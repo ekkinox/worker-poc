@@ -14,7 +14,7 @@ Simply run:
 go run .
 ```
 
-After a while, you can `ctrl+c` to see the worker pool graceful shutdown in action.
+After a while, you can `ctrl+c` to see the worker pool `graceful shutdown` in action.
 
 ## Worker registration
 
