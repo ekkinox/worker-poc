@@ -1,4 +1,4 @@
-# Worker module PoC
+# Worker Module PoC
 
 > PoC for a [Fx](https://uber-go.github.io/fx/) compatible worker module.
 
