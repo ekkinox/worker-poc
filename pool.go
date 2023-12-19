@@ -26,8 +26,10 @@ func (p *WorkerPool) Observer() *WorkerExecutionObserver {
 	return p.observer
 }
 
-func (p *WorkerPool) AddWorkers(workers ...Worker) {
+func (p *WorkerPool) AddWorkers(workers ...Worker) *WorkerPool {
 	p.workers = append(p.workers, workers...)
+
+	return p
 }
 
 func (p *WorkerPool) Start(ctx context.Context) error {
