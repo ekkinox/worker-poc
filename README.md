@@ -2,6 +2,11 @@
 
 > PoC for a [Fx](https://uber-go.github.io/fx/) compatible worker module.
 
+<!-- TOC -->
+* [Usage](#usage)
+* [Worker registration](#worker-registration)
+<!-- TOC -->
+
 ## Usage
 
 Simply run:
