@@ -13,7 +13,7 @@ func NewPanicWorker() *PanicWorker {
 }
 
 func (w *PanicWorker) Name() string {
-	return "panic"
+	return "PanicWorker"
 }
 
 func (w *PanicWorker) Run(ctx context.Context) error {

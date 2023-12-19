@@ -73,7 +73,7 @@ func (p *WorkerPool) startWorker(ctx context.Context, worker Worker) {
 			if r := recover(); r != nil {
 				workerExecution.
 					SetStatus(Stopped).
-					AddEvent(fmt.Sprintf("panic recovered: %s", r))
+					AddEvent(fmt.Sprintf("stopping execution %d/%d with recovered panic: %s", workerExecution.Current(), workerExecution.Limit(), r))
 
 				if workerExecution.Current() < workerExecution.Limit() {
 					workerExecution.AddEvent("restarting after panic recovery")
@@ -86,12 +86,12 @@ func (p *WorkerPool) startWorker(ctx context.Context, worker Worker) {
 		workerExecution.
 			SetStatus(Running).
 			SetCurrent(workerExecution.Current() + 1).
-			AddEvent("started")
+			AddEvent(fmt.Sprintf("starting execution %d/%d", workerExecution.Current(), workerExecution.Limit()))
 
 		if err := worker.Run(ctx); err != nil {
 			workerExecution.
 				SetStatus(Stopped).
-				AddEvent(fmt.Sprintf("error: %v, restarting", err.Error()))
+				AddEvent(fmt.Sprintf("stopping execution %d/%d with error: %v", workerExecution.Current(), workerExecution.Limit(), err.Error()))
 
 			if workerExecution.Current() < workerExecution.Limit() {
 				workerExecution.AddEvent("restarting after error")
@@ -101,7 +101,7 @@ func (p *WorkerPool) startWorker(ctx context.Context, worker Worker) {
 		} else {
 			workerExecution.
 				SetStatus(Stopped).
-				AddEvent("completed")
+				AddEvent(fmt.Sprintf("stopping execution %d/%d with success", workerExecution.Current(), workerExecution.Limit()))
 		}
 	}(ctx, workerExecution)
 }

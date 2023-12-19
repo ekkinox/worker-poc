@@ -27,6 +27,7 @@ type FxWorkerPoolParam struct {
 }
 
 func NewFxWorkerPool(p FxWorkerPoolParam) *WorkerPool {
+	// arbitrary value 3, will come form config
 	pool := NewWorkerPool(WithExecutionsLimit(3)).AddWorkers(p.Workers...)
 
 	p.LifeCycle.Append(fx.Hook{

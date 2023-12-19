@@ -13,7 +13,7 @@ func NewSuccessWorker() *SuccessWorker {
 }
 
 func (w *SuccessWorker) Name() string {
-	return "success"
+	return "SuccessWorker"
 }
 
 func (w *SuccessWorker) Run(ctx context.Context) error {

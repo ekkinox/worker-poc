@@ -13,7 +13,7 @@ func NewErrorWorker() *ErrorWorker {
 }
 
 func (w *ErrorWorker) Name() string {
-	return "error"
+	return "ErrorWorker"
 }
 
 func (w *ErrorWorker) Run(ctx context.Context) error {
