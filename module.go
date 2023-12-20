@@ -11,6 +11,8 @@ const ModuleName = "fx-worker"
 var FxWorkerModule = fx.Module(
 	ModuleName,
 	fx.Provide(
+		NewDefaultWorkerPoolFactory,
+		NewFxWorkerRegistry,
 		NewFxWorkerPool,
 		fx.Annotate(
 			NewFxWorkerModuleInfo,
@@ -23,12 +25,22 @@ var FxWorkerModule = fx.Module(
 type FxWorkerPoolParam struct {
 	fx.In
 	LifeCycle fx.Lifecycle
-	Workers   []Worker `group:"workers"`
+	Factory   WorkerPoolFactory
+	Registry  *WorkerRegistry
 }
 
-func NewFxWorkerPool(p FxWorkerPoolParam) *WorkerPool {
-	// arbitrary value 3, will come form config
-	pool := NewWorkerPool(WithExecutionsLimit(3)).AddWorkers(p.Workers...)
+func NewFxWorkerPool(p FxWorkerPoolParam) (*WorkerPool, error) {
+	pool, err := p.Factory.Create(WithMaxExecutionsAttempts(2), WithDeferredStartThreshold(10))
+	if err != nil {
+		return nil, err
+	}
+
+	resolvedWorkers, err := p.Registry.ResolveCheckerProbesRegistrations()
+	if err != nil {
+		return nil, err
+	}
+
+	pool.AddResolvedWorkers(resolvedWorkers...)
 
 	p.LifeCycle.Append(fx.Hook{
 		OnStart: func(context.Context) error {
@@ -39,5 +51,5 @@ func NewFxWorkerPool(p FxWorkerPoolParam) *WorkerPool {
 		},
 	})
 
-	return pool
+	return pool, nil
 }

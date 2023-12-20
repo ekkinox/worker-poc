@@ -28,21 +28,23 @@ func (e *WorkerExecutionEvent) Timestamp() time.Time {
 
 // WorkerExecution execution
 type WorkerExecution struct {
-	mutex   sync.Mutex
-	name    string
-	status  WorkerStatus
-	current int
-	limit   int
-	events  []*WorkerExecutionEvent
+	mutex                   sync.Mutex
+	name                    string
+	status                  WorkerStatus
+	currentExecutionAttempt int
+	maxExecutionsAttempts   int
+	deferredStartThreshold  int
+	events                  []*WorkerExecutionEvent
 }
 
-func NewWorkerExecution(worker Worker, limit int) *WorkerExecution {
+func NewWorkerExecution(name string, options Options) *WorkerExecution {
 	return &WorkerExecution{
-		name:    worker.Name(),
-		status:  Unknown,
-		current: 0,
-		limit:   limit,
-		events:  []*WorkerExecutionEvent{},
+		name:                    name,
+		status:                  Unknown,
+		currentExecutionAttempt: 0,
+		maxExecutionsAttempts:   options.MaxExecutionsAttempts,
+		deferredStartThreshold:  options.DeferredStartThreshold,
+		events:                  []*WorkerExecutionEvent{},
 	}
 }
 
@@ -66,34 +68,50 @@ func (e *WorkerExecution) SetStatus(status WorkerStatus) *WorkerExecution {
 	return e
 }
 
-func (e *WorkerExecution) Current() int {
+func (e *WorkerExecution) CurrentExecutionAttempt() int {
 	e.mutex.Lock()
 	defer e.mutex.Unlock()
 
-	return e.current
+	return e.currentExecutionAttempt
 }
 
-func (e *WorkerExecution) SetCurrent(current int) *WorkerExecution {
+func (e *WorkerExecution) SetCurrentExecutionAttempt(current int) *WorkerExecution {
 	e.mutex.Lock()
 	defer e.mutex.Unlock()
 
-	e.current = current
+	e.currentExecutionAttempt = current
 
 	return e
 }
 
-func (e *WorkerExecution) Limit() int {
+func (e *WorkerExecution) MaxExecutionsAttempts() int {
 	e.mutex.Lock()
 	defer e.mutex.Unlock()
 
-	return e.limit
+	return e.maxExecutionsAttempts
 }
 
-func (e *WorkerExecution) SetLimit(limit int) *WorkerExecution {
+func (e *WorkerExecution) SetMaxExecutionsAttempts(max int) *WorkerExecution {
 	e.mutex.Lock()
 	defer e.mutex.Unlock()
 
-	e.limit = limit
+	e.maxExecutionsAttempts = max
+
+	return e
+}
+
+func (e *WorkerExecution) DeferredStartThreshold() int {
+	e.mutex.Lock()
+	defer e.mutex.Unlock()
+
+	return e.deferredStartThreshold
+}
+
+func (e *WorkerExecution) SetDeferredStartThreshold(threshold int) *WorkerExecution {
+	e.mutex.Lock()
+	defer e.mutex.Unlock()
+
+	e.deferredStartThreshold = threshold
 
 	return e
 }

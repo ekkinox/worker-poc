@@ -14,8 +14,8 @@ func main() {
 		// register worker module
 		FxWorkerModule,
 		// register workers
-		AsWorker(workers.NewSuccessWorker),
-		AsWorker(workers.NewErrorWorker),
+		AsWorker(workers.NewSuccessWorker, WithDeferredStartThreshold(2)),
+		AsWorker(workers.NewErrorWorker, WithMaxExecutionsAttempts(5)),
 		AsWorker(workers.NewPanicWorker),
 		// periodic observation
 		fx.Invoke(func(pool *WorkerPool) {

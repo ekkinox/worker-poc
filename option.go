@@ -1,19 +1,27 @@
 package main
 
 type Options struct {
-	ExecutionsLimit int
+	DeferredStartThreshold int
+	MaxExecutionsAttempts  int
 }
 
-type WorkerPoolOption func(o *Options)
+type WorkerOption func(o *Options)
 
-func DefaultWorkerPoolOptions() Options {
+func DefaultWorkerOptions() Options {
 	return Options{
-		ExecutionsLimit: 1,
+		DeferredStartThreshold: 0,
+		MaxExecutionsAttempts:  1,
 	}
 }
 
-func WithExecutionsLimit(l int) WorkerPoolOption {
+func WithDeferredStartThreshold(t int) WorkerOption {
 	return func(o *Options) {
-		o.ExecutionsLimit = l
+		o.DeferredStartThreshold = t
+	}
+}
+
+func WithMaxExecutionsAttempts(l int) WorkerOption {
+	return func(o *Options) {
+		o.MaxExecutionsAttempts = l
 	}
 }

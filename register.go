@@ -2,12 +2,21 @@ package main
 
 import "go.uber.org/fx"
 
-func AsWorker(worker any) fx.Option {
-	return fx.Provide(
-		fx.Annotate(
-			worker,
-			fx.As(new(Worker)),
-			fx.ResultTags(`group:"workers"`),
+func AsWorker(w any, options ...WorkerOption) fx.Option {
+	return fx.Options(
+		fx.Provide(
+			fx.Annotate(
+				w,
+				fx.As(new(Worker)),
+				fx.ResultTags(`group:"workers"`),
+			),
+		),
+		fx.Supply(
+			fx.Annotate(
+				NewWorkerDefinition(GetReturnType(w), options...),
+				fx.As(new(WorkerDefinition)),
+				fx.ResultTags(`group:"workers-definitions"`),
+			),
 		),
 	)
 }
